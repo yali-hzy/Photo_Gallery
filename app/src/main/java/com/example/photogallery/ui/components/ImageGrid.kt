@@ -1,6 +1,7 @@
 package com.example.photogallery.ui.components
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun ImageGrid(images: List<Uri>, modifier: Modifier = Modifier) {
+    Log.e("ImageGrid", "ImageGrid: $images")
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 100.dp),
         modifier = modifier
@@ -23,7 +25,10 @@ fun ImageGrid(images: List<Uri>, modifier: Modifier = Modifier) {
         items(images.size) { index ->
             val uri = images[index]
             Image(
-                painter = rememberAsyncImagePainter(uri),
+                painter = rememberAsyncImagePainter(
+                    model = uri,
+                    onError = { Log.e("ImageError", "Failed to load image: $uri") }
+                ),
                 contentDescription = "Selected Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
