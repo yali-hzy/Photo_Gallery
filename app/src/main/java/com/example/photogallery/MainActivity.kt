@@ -21,7 +21,9 @@ class MainActivity : ComponentActivity() {
 
                 GalleryScreen(
                     images = viewModel.images,
-                    onSelectImages = { uris -> viewModel.addImages(uris) }
+                    onDeleteImage = viewModel::deleteImage,
+                    onRenameImage = viewModel::updateImageName,
+                    onSelectImages = viewModel::addImages
                 )
             }
         }

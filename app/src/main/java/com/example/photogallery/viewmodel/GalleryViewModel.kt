@@ -30,4 +30,16 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
             repository.addImages(newImages)
         }
     }
+
+    fun deleteImage(uri: String) {
+        viewModelScope.launch {
+            repository.deleteImageByUri(uri)
+        }
+    }
+
+    fun updateImageName(uri: String, newName: String) {
+        viewModelScope.launch {
+            repository.updateImageName(uri, newName)
+        }
+    }
 }

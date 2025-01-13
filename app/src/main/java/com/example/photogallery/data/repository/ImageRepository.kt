@@ -21,4 +21,12 @@ class ImageRepository(private val imageDao: ImageDao) {
     suspend fun addImages(images: List<ImageEntity>) {
         imageDao.insertImages(images)
     }
+
+    suspend fun deleteImageByUri(uri: String) {
+        imageDao.deleteImageByUri(uri)
+    }
+
+    suspend fun updateImageName(uri: String, newName: String) {
+        imageDao.updateImageName(uri, newName)
+    }
 }

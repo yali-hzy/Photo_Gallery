@@ -1,7 +1,6 @@
 package com.example.photogallery.ui.screens
 
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +27,8 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun GalleryScreen(
     images: Flow<PagingData<ImageEntity>>,
+    onDeleteImage: (String) -> Unit,
+    onRenameImage: (String, String) -> Unit,
     onSelectImages: (List<String>) -> Unit
 ) {
     val lazyImages = images.collectAsLazyPagingItems()
@@ -58,11 +59,13 @@ fun GalleryScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                val uriList = lazyImages.itemSnapshotList.items.map { Uri.parse(it.uri) }
+
+                val imageEntities = lazyImages.itemSnapshotList.items
                 ImageGrid(
-                    images = uriList,
-                    modifier = Modifier
-                        .weight(1f)
+                    images = imageEntities,
+                    onDeleteImage = onDeleteImage,
+                    onRenameImage = onRenameImage,
+                    modifier = Modifier.weight(1f)
                         .fillMaxWidth()
                 )
 
