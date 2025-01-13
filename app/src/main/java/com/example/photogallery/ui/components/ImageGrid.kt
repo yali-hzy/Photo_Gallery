@@ -27,8 +27,12 @@ import com.example.photogallery.data.local.entities.ImageEntity
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageGrid(images: List<ImageEntity>, modifier: Modifier = Modifier,
-              onDeleteImage: (String) -> Unit, onRenameImage: (String, String) -> Unit) {
+fun ImageGrid(images: List<ImageEntity>,
+              modifier: Modifier = Modifier,
+              onDeleteImage: (String) -> Unit,
+              onRenameImage: (String, String) -> Unit,
+              onImageClick: (String) -> Unit
+) {
     Log.e("ImageGrid", "ImageGrid: $images")
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 100.dp),
@@ -51,7 +55,9 @@ fun ImageGrid(images: List<ImageEntity>, modifier: Modifier = Modifier,
                     modifier = Modifier
                         .size(100.dp)
                         .combinedClickable(
-                            onClick = { /* TODO */ },
+                            onClick = {
+                                Log.e("ImageGrid", "ImageGrid: ${imageEntity.uri}")
+                                onImageClick(imageEntity.uri) },
                             onLongClick = { showDialog.value = true }
                         )
                 )

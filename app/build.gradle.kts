@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.paging.compose) // Controlled by BOM

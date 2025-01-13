@@ -29,7 +29,8 @@ fun GalleryScreen(
     images: Flow<PagingData<ImageEntity>>,
     onDeleteImage: (String) -> Unit,
     onRenameImage: (String, String) -> Unit,
-    onSelectImages: (List<String>) -> Unit
+    onSelectImages: (List<String>) -> Unit,
+    onImageClick: (String) -> Unit
 ) {
     val lazyImages = images.collectAsLazyPagingItems()
     val context = LocalContext.current
@@ -65,6 +66,7 @@ fun GalleryScreen(
                     images = imageEntities,
                     onDeleteImage = onDeleteImage,
                     onRenameImage = onRenameImage,
+                    onImageClick = onImageClick,
                     modifier = Modifier.weight(1f)
                         .fillMaxWidth()
                 )
