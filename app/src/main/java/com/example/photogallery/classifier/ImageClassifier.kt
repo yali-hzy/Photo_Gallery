@@ -20,7 +20,7 @@ class ImageClassifier(private val context: Context) {
     }
 
     private fun loadLabels(): List<String> {
-        return context.assets.open("labels.txt").bufferedReader().use { it.readLines() }
+        return context.assets.open("labels_zh.txt").bufferedReader().use { it.readLines() }
     }
 
     private fun getResizedBitmapFromUri(
