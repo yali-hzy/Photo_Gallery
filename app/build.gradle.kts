@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.photogallery"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -36,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        mlModelBinding = true
     }
 }
 
@@ -57,6 +58,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tensorflow.lite.gpu)
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.paging.compose) // Controlled by BOM
