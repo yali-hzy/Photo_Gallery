@@ -77,7 +77,6 @@ fun GalleryScreen(
                     modifier = Modifier.weight(1f)
                         .fillMaxWidth()
                 )
-
                 SelectImagesButton(
                     onClick = { launcher.launch(arrayOf("image/*")) }
                 )

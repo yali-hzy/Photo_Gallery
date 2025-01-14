@@ -20,6 +20,6 @@ fun SelectImagesButton(
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Text(text = "选择图片", color = Color.White)
+        Text(text = "导入图片", color = Color.White)
     }
 }

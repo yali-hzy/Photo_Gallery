@@ -24,7 +24,6 @@ import coil.compose.rememberAsyncImagePainter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FullScreenImageScreen(uri: String, onNavigateBack: () -> Unit) {
-    Log.e("FullScreenImageScreen", "FullScreenImageScreen: $uri")
     val context = LocalContext.current
     val inputStream = try {
         context.contentResolver.openInputStream(Uri.parse(uri))?.use { it }

@@ -33,7 +33,6 @@ fun ImageGrid(images: List<ImageEntity>,
               onRenameImage: (String, String) -> Unit,
               onImageClick: (String) -> Unit
 ) {
-    Log.e("ImageGrid", "ImageGrid: $images")
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 100.dp),
         modifier = modifier

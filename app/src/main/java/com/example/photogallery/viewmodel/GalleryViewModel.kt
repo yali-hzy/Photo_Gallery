@@ -2,7 +2,6 @@ package com.example.photogallery.viewmodel
 
 import android.app.Application
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -36,7 +35,6 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
             val name = imageClassifier.classifyImage(Uri.parse(uri))
             ImageEntity(uri = uri, name = name, timestamp = timestamp)
         }
-        Log.e("GalleryViewModel", "addImages: $newImages")
         viewModelScope.launch {
             repository.addImages(newImages)
         }

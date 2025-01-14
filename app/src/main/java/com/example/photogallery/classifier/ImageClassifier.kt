@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import android.util.Log
 import com.example.photogallery.ml.MobilenetV3TfliteLarge075224ClassificationV1
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -44,9 +43,6 @@ class ImageClassifier(private val context: Context) {
 
     fun classifyImage(imageUri: Uri): String {
         val bitmap = getResizedBitmapFromUri(imageUri) ?: return "未知"
-        Log.e("ImageClassifier", "bitmap: $bitmap")
-        Log.e("ImageClassifier", "Bitmap Buffer: ${bitmap.height}x${bitmap.width}")
-
         val tensorImage = TensorImage(DataType.FLOAT32)
         tensorImage.load(bitmap)
 
@@ -57,16 +53,11 @@ class ImageClassifier(private val context: Context) {
 
         val processedTensorImage = imageProcessor.process(tensorImage)
 
-        Log.e("ImageClassifier", "Processed TensorImage: $processedTensorImage")
-
         val outputs = model.process(processedTensorImage.tensorBuffer)
         val probabilities = outputs.outputFeature0AsTensorBuffer.floatArray
-        Log.e("ImageClassifier", "probabilities: ${probabilities.contentToString()}")
 
         val labels = loadLabels()
         val maxIndex = probabilities.indices.maxByOrNull { probabilities[it] } ?: -1
-        Log.e("ImageClassifier", "maxIndex: $maxIndex")
-        Log.e("ImageClassifier", "maxValue: ${probabilities[maxIndex]}")
 
         return labels.getOrElse(maxIndex) { "未命名" }
     }
