@@ -10,18 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.photogallery.data.local.entities.ImageEntity
 import com.example.photogallery.ui.components.ImageGrid
+import com.example.photogallery.ui.components.MySearchBar
 import com.example.photogallery.ui.components.SelectImagesButton
 import com.example.photogallery.viewmodel.GalleryViewModel
-import kotlinx.coroutines.flow.Flow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,9 +27,9 @@ fun GalleryScreen(
     viewModel: GalleryViewModel,
     onImageClick: (String) -> Unit
 ) {
-    val images: Flow<PagingData<ImageEntity>> = viewModel.images
-    val lazyImages = images.collectAsLazyPagingItems()
+    val images = viewModel.filteredImages.collectAsLazyPagingItems()
     val context = LocalContext.current
+    val searchQuery = remember { mutableStateOf("") }
 
     // 图片选择器 Launcher
     val launcher = rememberLauncherForActivityResult(
@@ -52,17 +49,28 @@ fun GalleryScreen(
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("图库") }) },
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = { androidx.compose.material3.Text(text = "图库") }
+                )
+                MySearchBar(
+                    query = searchQuery.value,
+                    onQueryChange = {
+                        searchQuery.value = it
+                        viewModel.setSearchQuery(it)
+                    }
+                )
+            }
+        },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-
-                val imageEntities = lazyImages.itemSnapshotList.items
                 ImageGrid(
-                    images = imageEntities,
+                    images = images.itemSnapshotList.items,
                     onDeleteImage = { uri -> viewModel.deleteImage(uri) },
                     onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
                     onImageClick = onImageClick,
