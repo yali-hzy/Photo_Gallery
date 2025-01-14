@@ -43,7 +43,7 @@ fun ImageGrid(images: List<ImageEntity>,
             val imageEntity = images[index]
             val showDialog = remember { mutableStateOf(false) }
             val showRenameDialog = remember { mutableStateOf(false) }
-            val newName = remember { mutableStateOf("") }
+            val newName = remember { mutableStateOf(imageEntity.name ?: "") }
             Column(modifier = Modifier.padding(8.dp)) {
                 Image(
                     painter = rememberAsyncImagePainter(
@@ -76,16 +76,16 @@ fun ImageGrid(images: List<ImageEntity>,
                         Column {
                             TextButton(onClick = {
                                 showDialog.value = false
-                                onDeleteImage(imageEntity.uri)
-                            }) {
-                                Text("删除图片")
-                            }
-                            TextButton(onClick = {
-                                showDialog.value = false
-                                newName.value = "" // 清空重命名输入
+                                newName.value = imageEntity.name ?: ""
                                 showRenameDialog.value = true
                             }) {
                                 Text("重命名")
+                            }
+                            TextButton(onClick = {
+                                showDialog.value = false
+                                onDeleteImage(imageEntity.uri)
+                            }) {
+                                Text("删除图片")
                             }
                         }
                     },

@@ -20,18 +20,17 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.photogallery.data.local.entities.ImageEntity
 import com.example.photogallery.ui.components.ImageGrid
 import com.example.photogallery.ui.components.SelectImagesButton
+import com.example.photogallery.viewmodel.GalleryViewModel
 import kotlinx.coroutines.flow.Flow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryScreen(
-    images: Flow<PagingData<ImageEntity>>,
-    onDeleteImage: (String) -> Unit,
-    onRenameImage: (String, String) -> Unit,
-    onSelectImages: (List<String>) -> Unit,
+    viewModel: GalleryViewModel,
     onImageClick: (String) -> Unit
 ) {
+    val images: Flow<PagingData<ImageEntity>> = viewModel.images
     val lazyImages = images.collectAsLazyPagingItems()
     val context = LocalContext.current
 
@@ -48,7 +47,7 @@ fun GalleryScreen(
                     Log.e("PermissionError", "Failed to persist URI permission: $uri", e)
                 }
             }
-            onSelectImages(uris.map { it.toString() })
+            viewModel.addImages(uris.map { it.toString() })
         }
     }
 
@@ -64,8 +63,8 @@ fun GalleryScreen(
                 val imageEntities = lazyImages.itemSnapshotList.items
                 ImageGrid(
                     images = imageEntities,
-                    onDeleteImage = onDeleteImage,
-                    onRenameImage = onRenameImage,
+                    onDeleteImage = { uri -> viewModel.deleteImage(uri) },
+                    onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
                     onImageClick = onImageClick,
                     modifier = Modifier.weight(1f)
                         .fillMaxWidth()

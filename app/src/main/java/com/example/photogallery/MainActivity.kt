@@ -41,10 +41,7 @@ fun PhotoGalleryApp(application: Application) {
             val viewModel: GalleryViewModel = viewModel(factory = factory)
 
             GalleryScreen(
-                images = viewModel.images,
-                onDeleteImage = { uri -> viewModel.deleteImage(uri) },
-                onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
-                onSelectImages = { uris -> viewModel.addImages(uris) },
+                viewModel = viewModel,
                 onImageClick = { uri -> navController.navigate("fullscreen?uri=${Uri.encode(uri)}") }
             )
         }
