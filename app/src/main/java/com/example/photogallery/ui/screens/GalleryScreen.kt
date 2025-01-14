@@ -56,6 +56,7 @@ fun GalleryScreen(
 
     BackHandler(enabled = searchQuery.isNotEmpty()) {
         viewModel.setSearchQuery("")
+        localFocusManager.clearFocus()
     }
 
     Scaffold(
