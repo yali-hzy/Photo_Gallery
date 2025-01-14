@@ -59,17 +59,7 @@ fun GalleryScreen(
     }
 
     Scaffold(
-        topBar = {
-            Column {
-                TopAppBar(
-                    title = { androidx.compose.material3.Text(text = "图库") }
-                )
-                MySearchBar(
-                    query = searchQuery,
-                    onQueryChange = { query -> viewModel.setSearchQuery(query) }
-                )
-            }
-        },
+        topBar = { TopAppBar( title = { androidx.compose.material3.Text(text = "图库") }) },
         content = { innerPadding ->
             Box(
                 modifier = Modifier
@@ -86,6 +76,10 @@ fun GalleryScreen(
                     }
             ) {
                 Column{
+                    MySearchBar(
+                        query = searchQuery,
+                        onQueryChange = { query -> viewModel.setSearchQuery(query) }
+                    )
                     ImageGrid(
                         images = images.itemSnapshotList.items,
                         onDeleteImage = { uri -> viewModel.deleteImage(uri) },
