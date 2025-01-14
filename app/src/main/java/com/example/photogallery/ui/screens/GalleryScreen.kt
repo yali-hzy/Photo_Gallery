@@ -18,14 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.photogallery.ui.components.ImageGrid
 import com.example.photogallery.ui.components.MySearchBar
 import com.example.photogallery.ui.components.SelectImagesButton
 import com.example.photogallery.viewmodel.GalleryViewModel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +36,7 @@ fun GalleryScreen(
     val context = LocalContext.current
     val searchQuery by viewModel.searchQueryState.collectAsState(initial = "")
     val keyboardController = LocalSoftwareKeyboardController.current
+    val localFocusManager = LocalFocusManager.current
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments()
@@ -66,16 +66,13 @@ fun GalleryScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .pointerInput(Unit) {
-                        coroutineScope {
-                            launch {
-                                detectTapGestures(onTap = {
-                                    keyboardController?.hide()
-                                })
-                            }
-                        }
+                        detectTapGestures(onTap = {
+                            keyboardController?.hide()
+                            localFocusManager.clearFocus()
+                        })
                     }
             ) {
-                Column{
+                Column {
                     MySearchBar(
                         query = searchQuery,
                         onQueryChange = { query -> viewModel.setSearchQuery(query) }
