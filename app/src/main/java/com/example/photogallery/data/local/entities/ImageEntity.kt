@@ -12,6 +12,6 @@ import androidx.room.PrimaryKey
 data class ImageEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "uri") val uri: String,
-    @ColumnInfo(name = "name") val name: String?,
+    @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "timestamp") val timestamp: Long
 )

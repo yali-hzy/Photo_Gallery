@@ -46,14 +46,14 @@ fun ImageGrid(images: List<ImageEntity>,
             val imageEntity = images[index]
             val showDialog = remember { mutableStateOf(false) }
             val showRenameDialog = remember { mutableStateOf(false) }
-            val newName = remember { mutableStateOf(imageEntity.name ?: "") }
+            val newName = remember { mutableStateOf(imageEntity.name) }
             Column(modifier = Modifier.padding(8.dp)) {
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = Uri.parse(imageEntity.uri),
                         onError = { Log.e("ImageError", "Failed to load image: ${imageEntity.uri}") }
                     ),
-                    contentDescription = imageEntity.name ?: "未命名",
+                    contentDescription = imageEntity.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(100.dp)
@@ -61,13 +61,13 @@ fun ImageGrid(images: List<ImageEntity>,
                             onClick = {
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
-                                onImageClick(imageEntity.uri, imageEntity.name ?: "未命名")
+                                onImageClick(imageEntity.uri, imageEntity.name)
                             },
                             onLongClick = { showDialog.value = true }
                         )
                 )
                 Text(
-                    text = imageEntity.name ?: "未命名",
+                    text = imageEntity.name,
                     modifier = Modifier.padding(top = 4.dp)
                         .align(alignment = CenterHorizontally)
                 )
@@ -81,7 +81,7 @@ fun ImageGrid(images: List<ImageEntity>,
                         Column {
                             TextButton(onClick = {
                                 showDialog.value = false
-                                newName.value = imageEntity.name ?: ""
+                                newName.value = imageEntity.name
                                 showRenameDialog.value = true
                             }) {
                                 Text("重命名")

@@ -65,7 +65,7 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
             if (query.isEmpty()) {
                 images
             } else {
-                images.filter { it.name?.contains(query, ignoreCase = true) ?: false }
+                images.filter { it.name.contains(query, ignoreCase = true) }
             }
         }.cachedIn(viewModelScope)
 
