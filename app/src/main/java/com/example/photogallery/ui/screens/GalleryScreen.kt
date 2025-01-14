@@ -2,8 +2,11 @@ package com.example.photogallery.ui.screens
 
 import android.content.Intent
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,12 +16,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.photogallery.ui.components.ImageGrid
 import com.example.photogallery.ui.components.MySearchBar
 import com.example.photogallery.ui.components.SelectImagesButton
 import com.example.photogallery.viewmodel.GalleryViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,8 +36,8 @@ fun GalleryScreen(
     val images = viewModel.filteredImages.collectAsLazyPagingItems()
     val context = LocalContext.current
     val searchQuery by viewModel.searchQueryState.collectAsState(initial = "")
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    // 图片选择器 Launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
@@ -47,6 +54,10 @@ fun GalleryScreen(
         }
     }
 
+    BackHandler(enabled = searchQuery.isNotEmpty()) {
+        viewModel.setSearchQuery("")
+    }
+
     Scaffold(
         topBar = {
             Column {
@@ -60,23 +71,34 @@ fun GalleryScreen(
             }
         },
         content = { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .pointerInput(Unit) {
+                        coroutineScope {
+                            launch {
+                                detectTapGestures(onTap = {
+                                    keyboardController?.hide()
+                                })
+                            }
+                        }
+                    }
             ) {
-                ImageGrid(
-                    images = images.itemSnapshotList.items,
-                    onDeleteImage = { uri -> viewModel.deleteImage(uri) },
-                    onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
-                    onImageClick = onImageClick,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                )
-                SelectImagesButton(
-                    onClick = { launcher.launch(arrayOf("image/*")) }
-                )
+                Column{
+                    ImageGrid(
+                        images = images.itemSnapshotList.items,
+                        onDeleteImage = { uri -> viewModel.deleteImage(uri) },
+                        onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
+                        onImageClick = onImageClick,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                    SelectImagesButton(
+                        onClick = { launcher.launch(arrayOf("image/*")) }
+                    )
+                }
             }
         }
     )
