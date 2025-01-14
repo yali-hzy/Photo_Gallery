@@ -18,9 +18,6 @@ interface ImageDao {
     @Query("DELETE FROM images WHERE uri = :uri")
     suspend fun deleteImageByUri(uri: String)
 
-    @Query("DELETE FROM images")
-    suspend fun deleteAllImages()
-
     @Query("UPDATE images SET name = :newName WHERE uri = :uri")
     suspend fun updateImageName(uri: String, newName: String)
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ import com.example.photogallery.viewmodel.GalleryViewModel
 @Composable
 fun GalleryScreen(
     viewModel: GalleryViewModel,
-    onImageClick: (String) -> Unit
+    onImageClick: (String, String) -> Unit
 ) {
     val images = viewModel.filteredImages.collectAsLazyPagingItems()
     val context = LocalContext.current
@@ -60,7 +61,7 @@ fun GalleryScreen(
     }
 
     Scaffold(
-        topBar = { TopAppBar( title = { androidx.compose.material3.Text(text = "图库") }) },
+        topBar = { TopAppBar( title = { Text(text = "图库") }) },
         content = { innerPadding ->
             Box(
                 modifier = Modifier

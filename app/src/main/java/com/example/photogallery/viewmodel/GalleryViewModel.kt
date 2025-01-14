@@ -13,6 +13,7 @@ import com.example.photogallery.data.local.entities.ImageEntity
 import com.example.photogallery.data.repository.ImageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
         searchQuery.value = query
     }
 
-    val searchQueryState: Flow<String> = searchQuery.asStateFlow()
+    val searchQueryState: StateFlow<String> = searchQuery.asStateFlow()
 
     fun addImages(uris: List<String>) {
         val timestamp = System.currentTimeMillis()

@@ -33,7 +33,7 @@ fun ImageGrid(images: List<ImageEntity>,
               modifier: Modifier = Modifier,
               onDeleteImage: (String) -> Unit,
               onRenameImage: (String, String) -> Unit,
-              onImageClick: (String) -> Unit
+              onImageClick: (String, String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -53,7 +53,7 @@ fun ImageGrid(images: List<ImageEntity>,
                         model = Uri.parse(imageEntity.uri),
                         onError = { Log.e("ImageError", "Failed to load image: ${imageEntity.uri}") }
                     ),
-                    contentDescription = "Selected Image",
+                    contentDescription = imageEntity.name ?: "未命名",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(100.dp)
@@ -61,7 +61,7 @@ fun ImageGrid(images: List<ImageEntity>,
                             onClick = {
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
-                                onImageClick(imageEntity.uri)
+                                onImageClick(imageEntity.uri, imageEntity.name ?: "未命名")
                             },
                             onLongClick = { showDialog.value = true }
                         )

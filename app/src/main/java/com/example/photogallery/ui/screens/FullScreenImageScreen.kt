@@ -23,7 +23,11 @@ import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FullScreenImageScreen(uri: String, onNavigateBack: () -> Unit) {
+fun FullScreenImageScreen(
+    uri: String,
+    name: String,
+    onNavigateBack: () -> Unit
+) {
     val context = LocalContext.current
     val inputStream = try {
         context.contentResolver.openInputStream(Uri.parse(uri))?.use { it }
@@ -52,7 +56,7 @@ fun FullScreenImageScreen(uri: String, onNavigateBack: () -> Unit) {
     ) {
         Image(
             painter = rememberAsyncImagePainter(Uri.parse(uri)),
-            contentDescription = "全屏图片",
+            contentDescription = name,
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(it)

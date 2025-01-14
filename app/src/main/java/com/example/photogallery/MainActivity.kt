@@ -42,16 +42,22 @@ fun PhotoGalleryApp(application: Application) {
 
             GalleryScreen(
                 viewModel = viewModel,
-                onImageClick = { uri -> navController.navigate("fullscreen?uri=${Uri.encode(uri)}") }
+                onImageClick = { uri, name ->
+                    navController.navigate("fullscreen?uri=${Uri.encode(uri)}&name=$name")
+                }
             )
         }
 
         composable(
-            route = "fullscreen?uri={uri}",
-            arguments = listOf(navArgument("uri") { type = NavType.StringType })
+            route = "fullscreen?uri={uri}&name={name}",
+            arguments = listOf(
+                navArgument("uri") { type = NavType.StringType },
+                navArgument("name") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
             val uri = backStackEntry.arguments?.getString("uri") ?: return@composable
-            FullScreenImageScreen(uri = uri) { navController.popBackStack() }
+            val name = backStackEntry.arguments?.getString("name") ?: return@composable
+            FullScreenImageScreen(uri = uri, name = name) { navController.popBackStack() }
         }
     }
 }
