@@ -20,7 +20,6 @@ import com.example.photogallery.ui.components.MySearchBar
 import com.example.photogallery.ui.components.SelectImagesButton
 import com.example.photogallery.viewmodel.GalleryViewModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryScreen(
@@ -29,7 +28,7 @@ fun GalleryScreen(
 ) {
     val images = viewModel.filteredImages.collectAsLazyPagingItems()
     val context = LocalContext.current
-    val searchQuery = remember { mutableStateOf("") }
+    val searchQuery by viewModel.searchQueryState.collectAsState(initial = "")
 
     // 图片选择器 Launcher
     val launcher = rememberLauncherForActivityResult(
@@ -39,7 +38,7 @@ fun GalleryScreen(
             val contentResolver = context.contentResolver
             for (uri in uris) {
                 try {
-                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 } catch (e: SecurityException) {
                     Log.e("PermissionError", "Failed to persist URI permission: $uri", e)
                 }
@@ -55,11 +54,8 @@ fun GalleryScreen(
                     title = { androidx.compose.material3.Text(text = "图库") }
                 )
                 MySearchBar(
-                    query = searchQuery.value,
-                    onQueryChange = {
-                        searchQuery.value = it
-                        viewModel.setSearchQuery(it)
-                    }
+                    query = searchQuery,
+                    onQueryChange = { query -> viewModel.setSearchQuery(query) }
                 )
             }
         },
@@ -74,7 +70,8 @@ fun GalleryScreen(
                     onDeleteImage = { uri -> viewModel.deleteImage(uri) },
                     onRenameImage = { uri, newName -> viewModel.updateImageName(uri, newName) },
                     onImageClick = onImageClick,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .fillMaxWidth()
                 )
                 SelectImagesButton(

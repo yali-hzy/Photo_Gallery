@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.photogallery.data.local.entities.ImageEntity
@@ -33,6 +34,7 @@ fun ImageGrid(images: List<ImageEntity>,
               onRenameImage: (String, String) -> Unit,
               onImageClick: (String) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 100.dp),
         modifier = modifier
@@ -55,8 +57,9 @@ fun ImageGrid(images: List<ImageEntity>,
                         .size(100.dp)
                         .combinedClickable(
                             onClick = {
-                                Log.e("ImageGrid", "ImageGrid: ${imageEntity.uri}")
-                                onImageClick(imageEntity.uri) },
+                                keyboardController?.hide()
+                                onImageClick(imageEntity.uri)
+                            },
                             onLongClick = { showDialog.value = true }
                         )
                 )

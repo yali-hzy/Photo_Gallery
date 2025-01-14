@@ -13,6 +13,7 @@ import com.example.photogallery.data.local.entities.ImageEntity
 import com.example.photogallery.data.repository.ImageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,12 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
 
     private val images: Flow<PagingData<ImageEntity>> = repository.getImages().cachedIn(viewModelScope)
     private val searchQuery = MutableStateFlow("")
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
+    }
+
+    val searchQueryState: Flow<String> = searchQuery.asStateFlow()
 
     fun addImages(uris: List<String>) {
         val timestamp = System.currentTimeMillis()
@@ -60,10 +67,6 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
                 images.filter { it.name?.contains(query, ignoreCase = true) ?: false }
             }
         }.cachedIn(viewModelScope)
-
-    fun setSearchQuery(query: String) {
-        searchQuery.value = query
-    }
 
     override fun onCleared() {
         super.onCleared()
